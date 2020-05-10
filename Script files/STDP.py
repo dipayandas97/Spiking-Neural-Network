@@ -26,7 +26,6 @@ class STDP:
         del_w = self.get_del_w(del_t)
 
         if del_w < 0:
-            #e = abs(self.w_min)-w if w<0 else abs(self.w_min)+w #difference 
             return w + self.lr*del_w*(w-self.w_min)*self.scale
 
         elif del_w > 0:
