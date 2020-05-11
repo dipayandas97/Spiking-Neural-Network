@@ -1,3 +1,6 @@
+#class names, initializations and function names have been updated in the inherited files
+#please update accordingly
+
 import numpy as np
 import matplotlib.pyplot as plt
 
