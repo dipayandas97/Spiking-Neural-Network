@@ -8,7 +8,7 @@ class GA:
         vectors = np.concatenate([m.flatten() for m in matrices])
         return np.asarray(vectors)
 
-    def vector_to_matrix(vector, dummy_matrices): #vector shaped: (L,) (for a single model)
+    def vector_to_matrix(self, vector, dummy_matrices): #vector shaped: (L,) (for a single model)
         synapse_list = []
         
         lens = []
