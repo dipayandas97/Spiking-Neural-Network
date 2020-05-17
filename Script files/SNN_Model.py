@@ -11,7 +11,7 @@ class SNN_Model:
         self.neuron_type = 'LIF'
         self.threshold=threshold
         self.dt=dt
-        self.tau_ref=tau_ref,
+        self.tau_ref=tau_ref
         self.Rm=Rm
         self.Cm=Cm
         
