@@ -70,7 +70,7 @@ class SNN_Model:
                     
         return activations_list #returns all layer activations : [input_layer:output_layer]
                 
-    def set_synapses(synapse_list): #list of synapse matrices
+    def set_synapses(self, synapse_list): #list of synapse matrices
         for l in range(self.num_layers):
             if self.synapse_list[l].shape == synapse_list[l].shape:
                 self.synapse_list[l][:,:] = synapse_list[l][:,:]
