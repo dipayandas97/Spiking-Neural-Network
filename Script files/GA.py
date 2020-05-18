@@ -40,19 +40,54 @@ class GA:
         return parents
 
     def crossover(self, parents, num_offsprings):
-        offsprings = np.zeros((num_offsprings, parents.shape[1]))
-        crossover_point = np.uint32(parents.shape[1]/2)
-        for k in range(num_offsprings):
-            parent_1 = k % parents.shape[0]
-            parent_2 = (k+1) % parents.shape[0]
-            offsprings[k, :crossover_point] = parents[parent_1, :crossover_point]
-            offsprings[k, crossover_point:] = parents[parent_2, crossover_point:]
+        if len(parents.shape)>1:
+            offsprings = np.zeros((num_offsprings, parents.shape[1]))
+            crossover_point = np.uint32(parents.shape[1]/2)
+            for k in range(num_offsprings):
+                parent_1 = k % parents.shape[0]
+                parent_2 = (k+1) % parents.shape[0]
+                offsprings[k, :crossover_point] = parents[parent_1, :crossover_point]
+                offsprings[k, crossover_point:] = parents[parent_2, crossover_point:]
+        else:
+            offsprings = np.zeros((num_offsprings,))
+            sample_ids = np.random.randint(0,parents.shape[0], size=(num_offsprings,))
+            offsprings = parents[sample_ids]
         return offsprings
 
-    def mutate(self, offsprings, mutation_percent):
-        num_of_cells_to_mutate = np.uint32((mutation_percent/100) * offsprings.shape[1])
-        for idx in range(offsprings.shape[0]):
-            mutation_indices = np.random.randint(0, offsprings.shape[1], num_of_cells_to_mutate)
-            random_val = np.random.uniform(-1.0,1.0,1)
-            offsprings[idx, mutation_indices] += random_val
-        return offsprings
+    def mutate(self, offsprings, perturbation_range, mutation_percent):
+        mutated_offsprings = np.zeros(offsprings.shape)        
+        if len(offsprings.shape)>1:
+            num_of_cells_to_mutate = np.uint32((mutation_percent/100) * offsprings.shape[1])
+            for idx in range(offsprings.shape[0]):
+                randomness = np.zeros(offsprings.shape[1])
+                mutation_indices = np.random.randint(0, offsprings.shape[1], num_of_cells_to_mutate)
+                
+                if type(perturbation_range[0]) == type(1.):
+                    for m in mutation_indices:
+                        randomness[m] = np.random.uniform(perturbation_range[0],perturbation_range[1],1)         #[-R,R]
+                elif type(perturbation_range[0]) == type(1):
+                    for m in mutation_indices:
+                        random_val = 0
+                        while random_val==0:                                                                       
+                            random_val = np.random.randint(perturbation_range[0],1+perturbation_range[1],1)      #{-I,I}
+                        randomness[m] = random_val
+                        
+                mutated_offsprings[idx] += randomness
+        else:
+            num_of_cells_to_mutate = np.uint32((mutation_percent/100) * offsprings.shape[0])
+            randomness = np.zeros(offsprings.shape[0])
+            mutation_indices = np.random.randint(0, offsprings.shape[0], num_of_cells_to_mutate)
+
+            if type(perturbation_range[0]) == type(1.):
+                for m in mutation_indices:
+                    randomness[m] = np.random.uniform(perturbation_range[0],perturbation_range[1],1)         #[-R,R]
+            elif type(perturbation_range[0]) == type(1):
+               for m in mutation_indices:
+                        random_val = 0
+                        while random_val==0:                                                                       
+                            random_val = np.random.randint(perturbation_range[0],1+perturbation_range[1],1)      #{-I,I}
+                        randomness[m] = random_val
+                           
+            mutated_offsprings += randomness   
+            
+        return mutated_offsprings
