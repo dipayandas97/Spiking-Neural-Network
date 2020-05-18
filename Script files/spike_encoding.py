@@ -35,8 +35,8 @@ class spike_encoding:
                     spikes = np.zeros(self.time_window)
                     k=0
                     while k<self.time_window:
+                        k += int(t)                        
                         spikes[k] = 1
-                        k += int(t)
                     spike_train.append(spikes)
                 spike_train = np.hstack(([x for x in spike_train]))  
                 total_spikes.append(spike_train) 
